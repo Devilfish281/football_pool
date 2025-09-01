@@ -1,0 +1,717 @@
+Developer: Developer: # Project Title
+- class elective advisor Project class 491
+
+# Role and Objective
+- Serve as a Python developer working on the 'Smart Elective Advisor: AI-Driven Course Selection Tool for CS Students' using modern Python tooling and best practices.
+- **Programming language:** Python (already installed).
+- **Manages virtual environments:** Poetry (already installed).
+- **Package installer for Python:** Poetry.
+- **Operating System:** Windows 11.
+- **Framework:** LangChain, LangGraph.
+
+# Initial Checklist
+- Begin each task with a concise checklist (3-7 bullets) of conceptual sub-tasks to ensure all steps and requirements are addressed.
+
+# Instructions
+- Use Visual Studio Code on Windows 11 to develop in Python.
+- Manage packages and virtual environments with Poetry.
+- Use Tkinter for the GUI, SQLite for the database, and incorporate LangChain, LangGraph, and OpenAI (gpt-4o) for AI components.
+- Employ Git and GitHub for version control.
+- Use Sphinx for documentation generation.
+- **Check my code for errors and suggest improvements.**
+
+## Coding and Commenting Guidelines
+- When adding new lines of code, annotate with `` at the end of the line.
+- If a line is both added and modified, use only `#  Changed Code` at the end of the line.
+- Do **not** comment on command-line instructions.
+- Provide complete code context when submitting changes.
+- When editing code:
+  1. Clearly state any relevant assumptions.
+  2. If feasible, create or execute minimal tests to verify changes, and validate results in 1-2 lines (proceed or self-correct as needed).
+  3. Provide review-ready diffs.
+  4. Follow the established project style conventions.
+- **Only annotate a line with `#  Changed Code` if the line is different from the original; do not add `#  Changed Code` when the line remains unchanged.**
+
+# Context
+- **Project Directory:** C:/Users/Me/Documents/Python/CPSC491/Projects/class_elective_advisor_491
+- **GitHub Repository:** https://github.com/Devilfish281/class_elective_advisor.git
+- All required programs and libraries (Python, Tkinter, Poetry, Git) are already installed.
+
+# Output Format
+- Default to plain text output unless Markdown is specifically required.
+- When using Markdown for code, employ fenced code blocks with correct language tags (e.g., ```python).
+- File, directory, function, and class names should appear in backticks if referenced.
+- Escape math notation if present.
+
+# Verbosity
+- Use concise summaries for general output.
+- For code, prioritize high verbosity: use descriptive names, clear logic, and meaningful comments.
+
+# Reasoning Effort
+- Set reasoning_effort according to task complexity (minimal for simple, medium/high for complex tasks); tool interactions and code edits should be terse, final outputs more complete as needed.
+
+# Stop Conditions
+- Tasks are complete when all success criteria and instructions have been addressed.
+- In cases of uncertainty, proceed with the most logical approach and document any relevant assumptions.
+- Only finish when the user's specification and project conventions are fully satisfied.
+
+********************************
+Check my code for errors and improvements.
+
+
+
+The File structure for my program is BELOW:
+└── C:\Users\ME\Documents\Python\Projects_Python\FootBallPool\Projects\football_pool/
+    ├── .env
+    ├── .env.example
+    ├── .gitignore
+    ├── README.md
+    ├── poetry.lock
+    └── pyproject.toml
+    └── src/
+        ├── football_pool/
+        │   ├── __init__.py
+        │   └── sample_code.py
+        └── football_pool_picker/
+            ├── __init__.py
+            ├── config.py
+            └── logging_utils.py
+            ├── data/
+            │   └── team_aliases.toml
+            ├── export/
+            │   ├── __init__.py
+            │   └── picksheet.py
+            ├── ingestion/
+            │   ├── __init__.py
+            │   └── csv_loader.py
+            ├── odds/
+            │   ├── __init__.py
+            │   ├── consensus.py
+            │   ├── converters.py
+            │   └── devig.py
+            ├── ranking/
+            │   ├── __init__.py
+            │   ├── ranker.py
+            │   └── tiebreakers.py
+            └── ui/
+                ├── __init__.py
+                └── app.py
+
+########################################
+Here is my code for __init__.py BELOW:
+########################################
+
+```python
+# Marker module for the football pool.
+```
+
+########################################
+Here is my code for sample_code.py BELOW:
+########################################
+
+```python
+# team_map.py  
+from __future__ import annotations
+
+import re
+from dataclasses import dataclass
+from typing import Dict, Mapping, Optional
+
+
+def _norm(token: str) -> str:
+    """Uppercase and remove non-alphanumerics for matching."""
+    return re.sub(r"[^A-Z0-9]", "", token.upper())
+
+
+@dataclass(frozen=True)
+class LeagueTeamName:
+    """Canonical NFL team-name resolver from abbreviations or aliases."""
+
+    _canonical: Mapping[str, str]
+
+    @staticmethod
+    def build() -> "LeagueTeamName":
+        M: Dict[str, str] = {}
+
+        def add(keys, full):
+            for k in keys:
+                M[_norm(k)] = full
+
+        add(["ARZ", "ARI", "AZ", "Cardinals"], "Arizona Cardinals")
+        add(["LAR", "LA", "Rams"], "Los Angeles Rams")
+        add(["SEA", "Seahawks"], "Seattle Seahawks")
+        add(["SF", "49ERS", "SF49ERS", "NINERS"], "San Francisco 49ers")
+
+        add(["ATL", "Falcons"], "Atlanta Falcons")
+        add(["CAR", "Panthers"], "Carolina Panthers")
+        add(["NO", "NOR", "Saints"], "New Orleans Saints")
+        add(["TB", "TBB", "Buccaneers", "Bucs"], "Tampa Bay Buccaneers")
+
+        add(["CHI", "Bears"], "Chicago Bears")
+        add(["DET", "Lions"], "Detroit Lions")
+        add(["GB", "Packers"], "Green Bay Packers")
+        add(["MIN", "Vikings"], "Minnesota Vikings")
+
+        add(["DAL", "Cowboys"], "Dallas Cowboys")
+        add(["NYG", "Giants"], "New York Giants")
+        add(["PHI", "Eagles"], "Philadelphia Eagles")
+        add(["WAS", "WSH", "Commanders"], "Washington Commanders")
+
+        add(["KC", "KAN", "Chiefs"], "Kansas City Chiefs")
+        add(["LAC", "Chargers"], "Los Angeles Chargers")
+        add(["LV", "Raiders"], "Las Vegas Raiders")
+        add(["DEN", "Broncos"], "Denver Broncos")
+
+        add(["HST", "HOU", "Texans"], "Houston Texans")
+        add(["IND", "Colts"], "Indianapolis Colts")
+        add(["JAX", "Jaguars"], "Jacksonville Jaguars")
+        add(["TEN", "Titans"], "Tennessee Titans")
+
+        add(["BLT", "BAL", "Ravens"], "Baltimore Ravens")
+        add(["CIN", "Bengals"], "Cincinnati Bengals")
+        add(["CLV", "CLE", "Browns"], "Cleveland Browns")
+        add(["PIT", "Steelers"], "Pittsburgh Steelers")
+
+        add(["BUF", "Bills"], "Buffalo Bills")
+        add(["MIA", "Dolphins"], "Miami Dolphins")
+        add(["NE", "NWE", "Patriots"], "New England Patriots")
+        add(["NYJ", "Jets"], "New York Jets")
+
+        return LeagueTeamName(M)
+
+    def to_full_name(self, token: str) -> Optional[str]:
+        """Return canonical full team name or None if unknown."""
+        if not token:
+            return None
+        t = _norm(token)
+        return self._canonical.get(t)
+
+
+resolver = LeagueTeamName.build()
+full = resolver.to_full_name("WSH")
+full = resolver.to_full_name("LAC")
+full = resolver.to_full_name("49ers")```
+
+########################################
+Here is my code for __init__.py BELOW:
+########################################
+
+```python
+# Marker module for the football pool picker.
+```
+
+########################################
+Here is my code for config.py BELOW:
+########################################
+
+```python
+from __future__ import annotations  
+
+import tomllib
+from dataclasses import dataclass, field
+from pathlib import Path
+
+DEFAULT_CONFIG_PATH = (
+    Path.home() / ".football_pool_picker" / "config.toml"
+)
+PACKAGE_DATA_DIR = Path(__file__).with_suffix("").parent / "data"
+
+
+@dataclass
+class AppConfig:
+    timezone: str = "America/Los_Angeles"
+    mapping_curve: str = "balanced"
+    books: list[str] = field(
+        default_factory=lambda: ["DraftKings", "FanDuel", "BetMGM"]
+    )
+    weights: dict[str, float] = field(default_factory=dict)
+    devig: bool = True
+    consensus_method: str = "mean"
+    team_aliases_file: Path = PACKAGE_DATA_DIR / "team_aliases.toml"
+
+
+def load_config(path: Path | None = None) -> AppConfig:
+    cfg_path = path or DEFAULT_CONFIG_PATH
+    if cfg_path.exists():
+        with cfg_path.open("rb") as f:
+            data = tomllib.load(f)
+        tool = data.get("tool", {}).get("football_pool_picker", {})
+        return AppConfig(
+            timezone=tool.get("timezone", "America/Los_Angeles"),
+            mapping_curve=tool.get("mapping_curve", "balanced"),
+            books=tool.get("books", ["DraftKings", "FanDuel", "BetMGM"]),
+            weights=tool.get("weights", {}),
+            devig=tool.get("devig", True),
+            consensus_method=tool.get("consensus_method", "mean"),
+            team_aliases_file=Path(
+                tool.get(
+                    "team_aliases_file", str(PACKAGE_DATA_DIR / "team_aliases.toml")
+                )
+            ),
+        )
+    return AppConfig()```
+
+########################################
+Here is my code for logging_utils.py BELOW:
+########################################
+
+```python
+import logging  
+
+
+def get_logger(name: str = "football_pool_picker") -> logging.Logger:
+    logger = logging.getLogger(name)
+    if not logger.handlers:
+        logger.setLevel(logging.INFO)
+        h = logging.StreamHandler()
+        fmt = logging.Formatter("[%(levelname)s] %(message)s")
+        h.setFormatter(fmt)
+        logger.addHandler(h)
+    return logger
+
+
+def anonymize_team(name: str) -> str:
+    if not name:
+        return name
+    prefix = name[:1]
+    return (
+        f"{prefix}*** {name.split(' ', 1)[-1]}" if " " in name else f"{prefix}***"
+    )```
+
+########################################
+Here is my code for __init__.py BELOW:
+########################################
+
+```python
+# Marker module for export.  
+```
+
+########################################
+Here is my code for picksheet.py BELOW:
+########################################
+
+```python
+from __future__ import annotations  
+
+from pathlib import Path
+
+import pandas as pd
+
+
+def export_picks_csv(df: pd.DataFrame, path: str | Path) -> None:
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(path, index=False)
+
+
+def export_picks_pdf(df: pd.DataFrame, path: str | Path) -> None:
+    p = Path(path)
+    lines = [
+        "Football Pool Picker — Confidence Card",
+        "",
+        df.to_string(index=False),
+    ]
+    p.write_text("\n".join(lines), encoding="utf-8")```
+
+########################################
+Here is my code for __init__.py BELOW:
+########################################
+
+```python
+# Marker module for ingestion.  
+```
+
+########################################
+Here is my code for csv_loader.py BELOW:
+########################################
+
+```python
+from __future__ import annotations  
+
+import re
+from pathlib import Path
+
+import pandas as pd
+from dateutil import parser as dtparser
+
+from logging_utils import anonymize_team, get_logger
+
+LOGGER = get_logger(__name__)
+
+UNICODE_MINUS = "\u2212"
+
+
+def _normalize_moneyline_value(val) -> int | None:
+    if pd.isna(val):
+        return None
+    s = str(val).strip()
+    s = s.replace(UNICODE_MINUS, "-")
+    s = re.sub(r"[^\d\-\+]", "", s)
+    if not s:
+        return None
+    try:
+        return int(s)
+    except ValueError:
+        return None
+
+
+def _parse_kickoff(val: str) -> pd.Timestamp | None:
+    if pd.isna(val):
+        return None
+    try:
+        dt = dtparser.parse(str(val))
+        return (
+            pd.Timestamp(dt).tz_localize(dt.tzinfo)
+            if dt.tzinfo
+            else pd.Timestamp(dt).tz_localize("UTC")
+        )
+    except Exception:
+        return None
+
+
+def load_odds_csv(path: str | Path) -> pd.DataFrame:
+    """Load a user-provided CSV of moneylines; returns a normalized DataFrame."""
+    path = Path(path)
+    df = pd.read_csv(path)
+    candidate_team_cols = [
+        c for c in df.columns if re.search(r"team|matchup|home|away", c, re.I)
+    ]
+    if not candidate_team_cols:
+        LOGGER.warning("No team columns detected.")
+    for col in df.columns:
+        if re.search(r"ml|moneyline|odds", col, re.I):
+            df[f"{col}__norm"] = df[col].map(_normalize_moneyline_value)
+    ko_cols = [
+        c for c in df.columns if re.search(r"kickoff|start|time|date", c, re.I)
+    ]
+    if ko_cols:
+        first = ko_cols[0]
+        df["kickoff_ts"] = df[first].map(_parse_kickoff)
+    sample = df.head(3).copy()
+    team_col = next(iter(candidate_team_cols), None)
+    if team_col:
+        sample[team_col] = (
+            sample[team_col].astype(str).map(anonymize_team)
+        )
+    LOGGER.info("CSV loaded; rows=%s, cols=%s", len(df), len(df.columns))
+    return df```
+
+########################################
+Here is my code for __init__.py BELOW:
+########################################
+
+```python
+# Marker module for odds processing.  
+```
+
+########################################
+Here is my code for consensus.py BELOW:
+########################################
+
+```python
+from __future__ import annotations  
+
+from statistics import mean, median
+from typing import Iterable
+
+
+def trimmed_mean(values: list[float], trim: int = 1) -> float:
+    vals = sorted(v for v in values if v is not None)
+    if not vals:
+        return float("nan")
+    if 2 * trim >= len(vals):
+        return mean(vals)
+    return mean(vals[trim:-trim])
+
+
+def weighted_mean(
+    values: list[float], weights: dict[str, float], labels: list[str]
+) -> float:
+    pairs = [
+        (v, weights.get(lbl, 1.0)) for v, lbl in zip(values, labels) if v is not None
+    ]
+    if not pairs:
+        return float("nan")
+    total_w = sum(w for _, w in pairs)
+    if total_w == 0:
+        return mean(v for v, _ in pairs)
+    return sum(v * w for v, w in pairs) / total_w
+
+
+def consensus(
+    values: list[float],
+    method: str = "mean",
+    *,
+    weights: dict[str, float] | None = None,
+    labels: list[str] | None = None,
+) -> float:
+    clean = [v for v in values if v is not None]
+    if not clean:
+        return float("nan")
+    m = method.lower()
+    if m == "mean":
+        return mean(clean)
+    if m == "median":
+        return median(clean)
+    if m == "trimmed":
+        return trimmed_mean(clean, trim=1)
+    if m == "weighted" and weights is not None and labels is not None:
+        return weighted_mean(values, weights, labels)
+    return mean(clean)```
+
+########################################
+Here is my code for converters.py BELOW:
+########################################
+
+```python
+from __future__ import annotations  
+
+import math
+
+
+def american_to_prob(odds: int | float) -> float:
+    """Convert American moneyline odds to implied probability (includes vig)."""
+    o = float(odds)
+    if o < 0:
+        return abs(o) / (abs(o) + 100.0)
+    return 100.0 / (o + 100.0)
+
+
+def safe_american_to_prob(odds: int | float | None) -> float | None:
+    if odds is None:
+        return None
+    try:
+        return american_to_prob(odds)
+    except Exception:
+        return None```
+
+########################################
+Here is my code for devig.py BELOW:
+########################################
+
+```python
+from __future__ import annotations  
+
+from typing import Sequence
+
+
+def proportional_devig(probabilities: Sequence[float]) -> list[float]:
+    """Scale probabilities so they sum to 1.0 (proportional method)."""
+    clean = [p for p in probabilities if p is not None]
+    total = sum(clean)
+    if total <= 0:
+        return [0.0 for _ in probabilities]
+    scale = 1.0 / total
+    return [p * scale if p is not None else 0.0 for p in probabilities]```
+
+########################################
+Here is my code for __init__.py BELOW:
+########################################
+
+```python
+# Marker module for ranking.
+```
+
+########################################
+Here is my code for ranker.py BELOW:
+########################################
+
+```python
+from __future__ import annotations  
+
+import math
+
+import pandas as pd
+
+from ranking.tiebreakers import (
+    TieBreakPrefs,
+    tie_key,
+)
+
+
+def _rank_range(n: int) -> list[int]:
+    return list(range(n, 0, -1))
+
+
+def assign_confidence_ranks(
+    games: pd.DataFrame,
+    *,
+    prob_col: str = "consensus_prob",
+    tiebreak_prefs: TieBreakPrefs | None = None,
+) -> pd.DataFrame:
+    """Assign unique confidence ranks N..1 by descending probability + tie-breaks."""
+    prefs = tiebreak_prefs or TieBreakPrefs()
+    df = games.copy()
+    if prob_col not in df.columns:
+        raise KeyError(f"Missing probability column: {prob_col}")
+    sort_keys = []
+    for _, r in df.iterrows():
+        sort_keys.append(
+            (float(r[prob_col] or 0.0), tie_key(r.to_dict(), prefs))
+        )
+    df = df.assign(__sort_key=sort_keys)
+    df = df.sort_values(by="__sort_key", ascending=False).drop(
+        columns="__sort_key"
+    )
+    ranks = _rank_range(len(df))
+    df["confidence_rank"] = ranks
+    return df```
+
+########################################
+Here is my code for tiebreakers.py BELOW:
+########################################
+
+```python
+from __future__ import annotations  
+
+from dataclasses import dataclass
+from datetime import datetime
+
+
+@dataclass(frozen=True)
+class TieBreakPrefs:
+    order: tuple[str, ...] = ("home", "kickoff", "alpha")
+
+
+def tie_key(row: dict, prefs: TieBreakPrefs) -> tuple:
+    parts = []
+    for rule in prefs.order:
+        if rule == "home":
+            parts.append(0 if row.get("favorite_is_home", False) else 1)
+        elif rule == "kickoff":
+            parts.append(row.get("kickoff_ts") or datetime.max)
+        elif rule == "alpha":
+            parts.append(str(row.get("favorite_team", "")))
+    return tuple(parts)```
+
+########################################
+Here is my code for __init__.py BELOW:
+########################################
+
+```python
+# Marker module for UI.  
+```
+
+########################################
+Here is my code for app.py BELOW:
+########################################
+
+```python
+from __future__ import annotations  
+
+import tkinter as tk
+from tkinter import filedialog, messagebox
+
+import pandas as pd
+
+from logging_utils import get_logger
+from odds.consensus import consensus
+from odds.converters import safe_american_to_prob
+from odds.devig import proportional_devig
+from ranking.ranker import assign_confidence_ranks
+from config import load_config
+from ingestion.csv_loader import load_odds_csv
+
+LOGGER = get_logger(__name__)
+
+
+class App(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title("Football Pool Picker")
+        self.geometry("900x600")
+        self.cfg = load_config()
+        self.df: pd.DataFrame | None = None
+        self.result: pd.DataFrame | None = None
+        self._build_ui()
+
+    def _build_ui(self):
+        top = tk.Frame(self)
+        top.pack(fill="x", padx=8, pady=8)
+        tk.Button(top, text="Import CSV", command=self.on_import).pack(
+            side="left"
+        )
+        tk.Button(top, text="Compute Ranks", command=self.on_compute).pack(
+            side="left", padx=8
+        )
+        tk.Button(top, text="Export CSV", command=self.on_export).pack(
+            side="left"
+        )
+        self.status = tk.StringVar(value="Ready.")
+        tk.Label(self, textvariable=self.status, anchor="w").pack(
+            fill="x", padx=8, pady=4
+        )
+        self.text = tk.Text(self, wrap="none")
+        self.text.pack(expand=True, fill="both")
+
+    def on_import(self):
+        path = filedialog.askopenfilename(
+            filetypes=[("CSV files", "*.csv")]
+        )
+        if not path:
+            return
+        try:
+            self.df = load_odds_csv(path)
+            self.status.set(f"Loaded {len(self.df)} rows.")
+            self._show(self.df.head(20))
+        except Exception as e:
+            LOGGER.exception("Import failed")
+            messagebox.showerror("Import Error", str(e))
+
+    def on_compute(self):
+        if self.df is None:
+            messagebox.showwarning(
+                "No Data", "Please import a CSV first."
+            )
+            return
+        df = self.df.copy()
+        ml_cols = [c for c in df.columns if c.endswith("__norm")]
+        if not ml_cols:
+            messagebox.showwarning(
+                "No Moneylines", "No normalized moneyline columns found."
+            )
+            return
+        prob_cols = []
+        for c in ml_cols:
+            pc = f"{c}__p"
+            df[pc] = df[c].map(safe_american_to_prob)
+            prob_cols.append(pc)
+        df["consensus_prob"] = df[prob_cols].apply(
+            lambda r: consensus(list(r.values), self.cfg.consensus_method), axis=1
+        )
+        df["consensus_prob"] = df["consensus_prob"].clip(
+            lower=0.0, upper=1.0
+        )
+        ranked = assign_confidence_ranks(df, prob_col="consensus_prob")
+        self.result = ranked
+        self.status.set("Ranks computed.")
+        self._show(ranked[["consensus_prob", "confidence_rank"]].head(25))
+
+    def on_export(self):
+        if self.result is None:
+            messagebox.showwarning(
+                "Nothing to Export", "Compute ranks first."
+            )
+            return
+        path = filedialog.asksaveasfilename(
+            defaultextension=".csv", filetypes=[("CSV", "*.csv")]
+        )
+        if not path:
+            return
+        try:
+            self.result.to_csv(path, index=False)
+            self.status.set(f"Exported to {path}")
+        except Exception as e:
+            LOGGER.exception("Export failed")
+            messagebox.showerror("Export Error", str(e))
+
+    def _show(self, df: pd.DataFrame):
+        self.text.delete("1.0", "end")
+        self.text.insert("end", df.to_string(index=False))
+
+
+def main():
+    App().mainloop()
+
+
+if __name__ == "__main__":
+    main()```
